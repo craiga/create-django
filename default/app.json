@@ -1,0 +1,14 @@
+{
+  "name": "project-name",
+  "buildpacks": [
+    {
+      "url": "heroku/python"
+    }
+  ],
+  "addons": ["heroku-postgresql"],
+  "env": {
+    "SECRET_KEY": {
+      "generator": "secret"
+    }
+  }
+}

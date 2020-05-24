@@ -1,0 +1,9 @@
+{
+  "name": "project-name",
+  "scripts": {
+    "prettier": "$(npm bin)/prettier"
+  },
+  "devDependencies": {
+    "prettier": "latest"
+  }
+}
