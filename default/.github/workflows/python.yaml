@@ -24,6 +24,6 @@ jobs:
       - name: Setup
         run: |
           pip install pipenv
-          make setup-dev
+          pipenv install --dev
       - name: Lint Python Code
         run: make lint-python

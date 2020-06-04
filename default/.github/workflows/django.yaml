@@ -10,7 +10,7 @@ on:
 jobs:
   pytest:
     name: Test Django
-    timeout-minutes: 2
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repo
@@ -22,7 +22,7 @@ jobs:
       - name: Setup
         run: |
           pip install pipenv
-          make setup-dev
+          pipenv install --dev
       - name: Run Tests
         run: make test
 
@@ -39,8 +39,11 @@ jobs:
           python-version: 3.8
       - name: Setup
         run: |
-          sudo apt-get install -y pwgen
           pip install pipenv
-          make setup
+          pipenv install
       - name: Test Django Configured Correctly
         run: make check-django
+        env:
+           DATABASE_URL: sqlite:///db.sqlite3
+           SECRET_KEY: Some very long and complex string which is very, very secure.
+           CANONICAL_HOST: project-name.net
