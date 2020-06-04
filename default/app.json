@@ -2,6 +2,9 @@
   "name": "project-name",
   "buildpacks": [
     {
+      "url": "heroku/nodejs"
+    },
+    {
       "url": "heroku/python"
     }
   ],

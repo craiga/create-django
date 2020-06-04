@@ -1,14 +1,23 @@
 default:  ## Build and serve the web site.
 	pipenv run python manage.py migrate
+	make scss
+	make js
 	pipenv run python manage.py runserver
+
+db:  ## Create a database.
+	createuser project_name --createdb
+	psql --command "alter user project_name with encrypted password 'security_is_important';"
+	createdb project_name --owner=project_name
 
 setup:  ## Install required environments and packages.
 	pipenv install
-	printf "DATABASE_URL=sqlite:///db.sqlite3\nCANONICAL_HOST=localhost\nSECRET_KEY=`pwgen --capitalize --numerals 50 1`\n" > .env
+	npm ci --production
+	printf "DATABASE_URL=postgres://project_name:security_is_important@localhost/project_name\nCANONICAL_HOST=localhost\nSECRET_KEY=`pwgen --capitalize --numerals 50 1`\n" > .env
 
 setup-dev:  ## Install required environments and packages for development.
 	pipenv install --dev
-	printf "DEBUG=1\nDATABASE_URL=sqlite:///db.sqlite3\n" > .env
+	npm ci
+	printf "DEBUG=1\nDATABASE_URL=postgres://project_name:security_is_important@localhost/project_name\n" > .env
 
 test: ## Run tests.
 	pipenv run pytest
@@ -21,6 +30,18 @@ migrations:  ## Create Django migrations.
 	pipenv run python manage.py makemigrations
 	pipenv run black **/migrations/*.py
 	pipenv run isort --apply **/migrations/*.py
+
+scss:  ## Build SCSS.
+	npm run sass -- .
+
+scss-continuous:  ## Build SCSS continuously.
+	npm run sass -- . --watch
+
+js:  ## Build JavaScript.
+	find . \( -path "./node_modules" -o -iname "bundle.*" \) -prune -o -path "*/static/*" -a -name "*.js" -print | xargs npm run browserify -- --outfile project_name/static/bundle.js
+
+js-continuous:  ## Build JavaScript continuously.
+	find . \( -path "./node_modules" -o -iname "bundle.*" \) -prune -o -path "*/static/*" -a -name "*.js" -print | xargs npm run watchify -- --outfile project_name/static/bundle.js --verbose
 
 lint-python:  ## Lint Python.
 	pipenv run isort --check-only
@@ -42,6 +63,18 @@ lint-json: ## Lint JSON.
 
 fix-json: ## Attempt to fix JSON issues reported by the linter.
 	npm run prettier -- **/*.json --write
+
+lint-scss: ## Lint SCSS.
+	npm run prettier -- '**/*.scss' --check
+
+fix-scss: ## Attempt to fix SCSS issues reported by the linter.
+	npm run prettier -- '**/*.scss' --write
+
+lint-js: ## Lint JavaScript.
+	npm run prettier -- '**/*.js' --check
+
+fix-js: ## Attempt to fix JavaScript issues reported by the linter.
+	npm run prettier -- '**/*.js' --write
 
 help: ## Display this help screen.
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
