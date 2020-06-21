@@ -1,6 +1,9 @@
-/.env
-/node_modules
 **/static/**/*.css
 **/static/**/*.map
-project_name/static/bundle.js
+/.env
+/cypress/plugins
+/cypress/screenshots
+/cypress/videos
+/node_modules
+/project_name/static/bundle.js
 /staticfiles

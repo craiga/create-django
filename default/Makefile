@@ -9,15 +9,19 @@ db:  ## Create a database.
 	psql --command "alter user project_name with encrypted password 'security_is_important';"
 	createdb project_name --owner=project_name
 
-setup:  ## Install required environments and packages.
-	pipenv install
-	npm ci --production
-	printf "DATABASE_URL=postgres://project_name:security_is_important@localhost/project_name\nCANONICAL_HOST=localhost\nSECRET_KEY=`pwgen --capitalize --numerals 50 1`\n" > .env
+db-delete:  ## Delete database.
+	dropdb project_name
+	dropuser project_name
 
-setup-dev:  ## Install required environments and packages for development.
+setup:  ## Install required environments and packages.
 	pipenv install --dev
 	npm ci
+
+dotenv:  ## Create .env file suitable for development.
 	printf "DEBUG=1\nDATABASE_URL=postgres://project_name:security_is_important@localhost/project_name\n" > .env
+
+superuser: ## Create a Django superuser. Requires DJANGO_SUPERUSER_USERNAME, _EMAIL and _PASSWORD environment variables.
+	pipenv run python manage.py createsuperuser --no-input
 
 test: ## Run tests.
 	pipenv run pytest
@@ -30,6 +34,22 @@ migrations:  ## Create Django migrations.
 	pipenv run python manage.py makemigrations
 	pipenv run black **/migrations/*.py
 	pipenv run isort --apply **/migrations/*.py
+
+migrate:  ## Run Django migrations.
+	pipenv run python manage.py migrate
+
+cypress-web:  ## Build and serve the web site for Cypress.
+	PIPENV_DONT_LOAD_ENV=1 DATABASE_URL=postgres://project_name_cypress:security_is_important@localhost/project_name_cypress pipenv run python manage.py migrate
+	PIPENV_DONT_LOAD_ENV=1 DEBUG=1 DATABASE_URL=postgres://project_name_cypress:security_is_important@localhost/project_name_cypress pipenv run python manage.py runserver 8001
+
+cypress-db:  ## Create database for Cypress.
+	createuser project_name_cypress --createdb
+	psql --command "alter user project_name_cypress with encrypted password 'security_is_important';"
+	createdb project_name_cypress --owner=project_name_cypress
+
+cypress-db-delete:  ## Delete database for Cypress.
+	dropdb project_name_cypress
+	dropuser project_name_cypress
 
 scss:  ## Build SCSS.
 	npm run sass -- .

@@ -1,0 +1,6 @@
+{
+  "baseUrl": "http://localhost:8001",
+  "env": {
+    "DJANGO_MANAGE_COMMAND": "PIPENV_DONT_LOAD_ENV=1 DATABASE_URL=postgres://project_name_cypress:security_is_important@localhost/project_name_cypress pipenv run python manage.py"
+  }
+}

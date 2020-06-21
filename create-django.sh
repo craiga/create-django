@@ -65,6 +65,7 @@ heroku apps:create $PROJECT_NAME_HYPHENATED --no-remote --region eu
 heroku pipelines:create $PROJECT_NAME_HYPHENATED --app $PROJECT_NAME_HYPHENATED --stage=production --remote origin
 heroku pipelines:connect $PROJECT_NAME_HYPHENATED --repo craiga/$PROJECT_NAME_HYPHENATED
 heroku labs:enable runtime-dyno-metadata --app $PROJECT_NAME_HYPHENATED
+heroku config:set SECRET_KEY="`pwgen --numerals --symbols --secure 100 1`" --app $PROJECT_NAME_HYPHENATED
 read -p "Finish setting up app in Heroku, deploy to Heroku, then press enter to continue."
 
 heroku run --app $PROJECT_NAME_HYPHENATED python manage.py createsuperuser
