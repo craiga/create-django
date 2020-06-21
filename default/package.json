@@ -8,6 +8,7 @@
     "postinstall": "make scss && make js"
   },
   "dependencies": {
+    "@sentry/browser": "latest",
     "browserify": "latest",
     "sass": "latest"
   },

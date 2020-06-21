@@ -53,28 +53,28 @@ fix-python:  ## Attempt to automatically fix Python issues reported by linter.
 	pipenv run black .
 
 lint-yaml: ## Lint YAML.
-	npm run prettier -- **/*.yaml --check
+	npm run prettier -- "**/*.yaml" --check
 
 fix-yaml: ## Attempt to fix YAML issues reported by the linter.
-	npm run prettier -- **/*.yaml --write
+	npm run prettier -- "**/*.yaml" --write
 
 lint-json: ## Lint JSON.
-	npm run prettier -- **/*.json --check
+	npm run prettier -- "**/*.json" --check
 
 fix-json: ## Attempt to fix JSON issues reported by the linter.
-	npm run prettier -- **/*.json --write
+	npm run prettier -- "**/*.json" --write
 
 lint-scss: ## Lint SCSS.
-	npm run prettier -- '**/*.scss' --check
+	npm run prettier -- "**/*.scss" --check
 
 fix-scss: ## Attempt to fix SCSS issues reported by the linter.
-	npm run prettier -- '**/*.scss' --write
+	npm run prettier -- "**/*.scss" --write
 
 lint-js: ## Lint JavaScript.
-	npm run prettier -- '**/*.js' --check
+	npm run prettier -- "**/*.js" --check
 
 fix-js: ## Attempt to fix JavaScript issues reported by the linter.
-	npm run prettier -- '**/*.js' --write
+	npm run prettier -- "**/*.js" --write
 
 help: ## Display this help screen.
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
