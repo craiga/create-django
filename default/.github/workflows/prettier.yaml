@@ -1,15 +1,19 @@
-name: SCSS
+name: Prettier
 on:
   push:
     paths:
+      - "**/*.js"
+      - "**/*.json"
+      - "**/*.md"
       - "**/*.scss"
-      - ".github/workflows/scss.yaml"
+      - "**/*.yaml"
+      - ".github/workflows/prettier.yaml"
       - "package.json"
       - "package-lock.json"
 
 jobs:
-  lint-scss:
-    name: Lint SCSS
+  prettier:
+    name: Check formatting
     timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
@@ -20,11 +24,11 @@ jobs:
         with:
           node-version: 12
       - name: Cache NPM
-        uses: actions/cache@v2.1.4
+        uses: actions/cache@v2.1.5
         with:
           path: ~/.npm
           key: npm-${{ hashFiles('package-lock.json') }}
       - name: Setup
         run: npm ci
-      - name: Lint SCSS
-        run: npx stylelint **/*.scss
+      - name: Run Prettier Check
+        run: npx prettier . --check

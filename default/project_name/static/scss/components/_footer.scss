@@ -1,0 +1,15 @@
+@use "../colours";
+@use "../typography";
+@use "../base";
+
+footer {
+  font-size: typography.$small-size;
+  line-height: typography.$small-line-height;
+  background: colours.$black;
+  color: colours.$white;
+  padding: base.$padding;
+
+  a {
+    color: inherit;
+  }
+}

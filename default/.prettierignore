@@ -1,1 +1,4 @@
-project_name/static/bundle.js
+*.html
+/.nova/
+/project_name/static/bundle.*
+/staticfiles/

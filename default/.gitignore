@@ -1,9 +1,7 @@
+*.pyc
 **/static/**/*.css
 **/static/**/*.map
 /.env
-/cypress/plugins
-/cypress/screenshots
-/cypress/videos
 /node_modules
-/project_name/static/bundle.js
+/project_name/static/bundle.*
 /staticfiles

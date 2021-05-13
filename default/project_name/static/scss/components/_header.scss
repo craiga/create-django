@@ -1,19 +1,16 @@
-@use "../colors" as *;
-@use "../fonts" as *;
+@use "../colours";
+@use "../typography";
+@use "../base";
 
-$baseSize: 16px;
-$height: $baseSize * 6;
-$background: $black;
-$foreground: $white;
+$height: typography.$size * 6;
 
 header {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
 
-  background: $background;
-  color: $foreground;
-  font-size: $baseSize;
+  background: colours.$black;
+  color: colours.$white;
   line-height: 1;
   height: $height;
 
@@ -23,8 +20,9 @@ header {
 
   h1 {
     flex-grow: 1;
-    font-size: $baseSize * 2;
-    padding: ($height - ($baseSize * 2)) / 2;
+    font-size: typography.$size * 2;
+    line-height: typography.$size * 2;
+    padding: ($height - (typography.$size * 2)) / 2;
     margin: 0;
   }
 
@@ -41,7 +39,7 @@ header {
       li {
         a {
           color: inherit;
-          padding: ($height - $baseSize) / 2 $baseSize;
+          padding: ($height - typography.$size) / 2 typography.$size;
           display: block;
         }
       }

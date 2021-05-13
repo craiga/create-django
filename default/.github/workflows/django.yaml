@@ -5,45 +5,71 @@ on:
       - "*"
   push:
     branches:
-      - "master"
+      - "main"
 
 jobs:
   pytest:
     name: Test Django
     timeout-minutes: 5
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: project_name
+          POSTGRES_PASSWORD: security_is_important
+          POSTGRES_DB: project_name
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - name: Clone Repo
         uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python PYTHON_VERSION
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: PYTHON_VERSION
+      - name: Cache Pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt', 'requirements-test.txt') }}
       - name: Setup
         run: |
-          pip install pipenv
-          pipenv install --dev
+          pip install --requirement requirements.txt --requirement requirements-test.txt
       - name: Run Tests
-        run: make test
+        run: pytest
+        env:
+          DATABASE_URL: postgres://project_name:security_is_important@localhost/project_name
 
   check-django-configuration:
     name: Check Django Configuration
-    timeout-minutes: 2
+    timeout-minutes: 5
     runs-on: ubuntu-latest
     steps:
       - name: Clone Repo
         uses: actions/checkout@v2
-      - name: Set up Python 3.8
+      - name: Set up Python PYTHON_VERSION
         uses: actions/setup-python@v2
         with:
-          python-version: 3.8
+          python-version: PYTHON_VERSION
+      - name: Cache Pip
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: pip-${{ hashFiles('requirements.txt') }}
       - name: Setup
         run: |
-          pip install pipenv
-          pipenv install
-      - name: Test Django Configured Correctly
-        run: make check-django
+          pip install --requirement requirements.txt
+      - name: Test Django configured correctly
+        run: |
+          python manage.py makemigrations --check
+          python manage.py check --deploy --fail-level INFO
         env:
-           DATABASE_URL: sqlite:///db.sqlite3
-           SECRET_KEY: Some very long and complex string which is very, very secure.
-           CANONICAL_HOST: project-name.net
+          DATABASE_URL: sqlite:///db.sqlite3
+          SECRET_KEY: Some very long and complex string which is very, very secure.
+          CANONICAL_HOST: somecanonicalhost.com
