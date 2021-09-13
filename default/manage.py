@@ -14,7 +14,7 @@ def main():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "project_name.settings")
 
     with suppress(ModuleNotFoundError):
-        import dotenv
+        import dotenv  # pylint: disable=import-error
 
         dotenv.load_dotenv(verbose=True)
 
